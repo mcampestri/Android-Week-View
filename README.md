@@ -1,5 +1,4 @@
-Android Week View
-=================
+# Android Week View
 
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/Android-Week-View/Lobby)
 
@@ -7,8 +6,5 @@ Android Week View
 
 ![](images/screen-shot.png)
 
-This fork
-------------
-
-* Fixed time period
-* Scrolling enable/disable
+## This fork:
+- Horizontal scrolling enable/disable
