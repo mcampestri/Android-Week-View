@@ -6,5 +6,5 @@
 
 ![](images/screen-shot.png)
 
-## This fork:
+## This fork
 - Horizontal scrolling enable/disable
