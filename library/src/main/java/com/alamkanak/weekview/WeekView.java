@@ -156,6 +156,9 @@ public class WeekView extends View {
     private DateTimeInterpreter mDateTimeInterpreter;
     private ScrollListener mScrollListener;
 
+    // Added in fork
+    private boolean horizontalScrollingEnabled = true;
+
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
         @Override
@@ -173,7 +176,7 @@ public class WeekView extends View {
             switch (mCurrentScrollDirection) {
                 case NONE: {
                     // Allow scrolling only in one direction.
-                    if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                    if (Math.abs(distanceX) > Math.abs(distanceY) && horizontalScrollingEnabled) {
                         if (distanceX > 0) {
                             mCurrentScrollDirection = Direction.LEFT;
                         } else {
@@ -1223,6 +1226,16 @@ public class WeekView extends View {
     //      Functions related to setting and getting the properties.
     //
     /////////////////////////////////////////////////////////////////
+
+
+    public void setHorizontalScrollingEnabled(boolean enabled) {
+        this.horizontalScrollingEnabled = enabled;
+    }
+
+    public boolean isHorizontalScrollingEnabled() {
+        return horizontalScrollingEnabled;
+    }
+
 
     public void setOnEventClickListener (EventClickListener listener) {
         this.mEventClickListener = listener;
