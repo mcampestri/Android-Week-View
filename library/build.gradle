@@ -12,10 +12,15 @@ android {
         minSdkVersion 27
         targetSdkVersion 27
     }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
 }
-
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
