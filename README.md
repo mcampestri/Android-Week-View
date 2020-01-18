@@ -6,5 +6,6 @@
 
 ![](images/screen-shot.png)
 
-## This fork
+## What this fork adds
 - Horizontal scrolling enable/disable
+- Possibility to highlight days

@@ -39,8 +39,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import static com.alamkanak.weekview.WeekViewUtil.isSameDay;
 import static com.alamkanak.weekview.WeekViewUtil.today;
@@ -158,6 +160,7 @@ public class WeekView extends View {
 
     // Added in fork
     private boolean horizontalScrollingEnabled = true;
+    private List<Calendar> highlightedDays = new ArrayList<>();
 
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
@@ -733,18 +736,36 @@ public class WeekView extends View {
             // Check if the day is today.
             day = (Calendar) today.clone();
             day.add(Calendar.DATE, dayNumber - 1);
-            boolean sameDay = isSameDay(day, today);
+            boolean highlightedDay = isSameDay(day, today) || isHighlightedDate(day);
 
             // Draw the day labels.
             String dayLabel = getDateTimeInterpreter().interpretDate(day);
             if (dayLabel == null)
                 throw new IllegalStateException("A DateTimeInterpreter must not return null date");
-            canvas.drawText(dayLabel, startPixel + mWidthPerDay / 2, mHeaderTextHeight + mHeaderRowPadding, sameDay ? mTodayHeaderTextPaint : mHeaderTextPaint);
+            canvas.drawText(dayLabel, startPixel + mWidthPerDay / 2, mHeaderTextHeight + mHeaderRowPadding, highlightedDay ? mTodayHeaderTextPaint : mHeaderTextPaint);
             drawAllDayEvents(day, startPixel, canvas);
             startPixel += mWidthPerDay + mColumnGap;
         }
 
     }
+
+
+    private boolean isHighlightedDate(Calendar date) {
+        boolean found = false;
+        for(int i = 0; i < highlightedDays.size() && !found; i++) {
+            if(highlightedDays.get(i).compareTo(date) == 0)
+                found = true;
+        }
+
+        return found;
+    }
+
+    public void highlightDate(Calendar date) {
+        this.highlightedDays.add(date);
+        // Inefficient workaround, causes invalidate() every time a new day is highlighted
+        goToDate(date);
+    }
+
 
     /**
      * Get the time and date where the user clicked on.
