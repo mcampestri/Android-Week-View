@@ -51,5 +51,9 @@
         <attr name="verticalFlingEnabled" format="boolean"/>
         <attr name="allDayEventHeight" format="dimension"/>
         <attr name="scrollDuration" format="integer"/>
+
+        <!-- Added in fork -->
+        <attr name="headerMarginBottom" format="dimension"/>
+
     </declare-styleable>
 </resources>

@@ -76,7 +76,7 @@ public class WeekView extends View {
     private float mWidthPerDay;
     private Paint mDayBackgroundPaint;
     private Paint mHourSeparatorPaint;
-    private float mHeaderMarginBottom;
+    private int mHeaderMarginBottom;
     private Paint mTodayBackgroundPaint;
     private Paint mFutureBackgroundPaint;
     private Paint mPastBackgroundPaint;
@@ -361,6 +361,7 @@ public class WeekView extends View {
             mVerticalFlingEnabled = a.getBoolean(R.styleable.WeekView_verticalFlingEnabled, mVerticalFlingEnabled);
             mAllDayEventHeight = a.getDimensionPixelSize(R.styleable.WeekView_allDayEventHeight, mAllDayEventHeight);
             mScrollDuration = a.getInt(R.styleable.WeekView_scrollDuration, mScrollDuration);
+            mHeaderMarginBottom = a.getDimensionPixelSize(R.styleable.WeekView_headerMarginBottom, mHeaderMarginBottom);
         } finally {
             a.recycle();
         }
@@ -384,7 +385,6 @@ public class WeekView extends View {
         Rect rect = new Rect();
         mTimeTextPaint.getTextBounds("00 PM", 0, "00 PM".length(), rect);
         mTimeTextHeight = rect.height();
-        mHeaderMarginBottom = mTimeTextHeight / 2;
         initTextTimeWidth();
 
         // Measure settings for header row.
@@ -651,7 +651,7 @@ public class WeekView extends View {
             mLastVisibleDay = (Calendar) day.clone();
             day.add(Calendar.DATE, dayNumber - 1);
             mLastVisibleDay.add(Calendar.DATE, dayNumber - 2);
-            boolean sameDay = isSameDay(day, today);
+            boolean highlightedDay = isSameDay(day, today) || isHighlightedDate(day);
 
             // Get more events if necessary. We want to store the events 3 months beforehand. Get
             // events only when it is the first iteration of the loop.
@@ -671,7 +671,7 @@ public class WeekView extends View {
                     Paint futurePaint = isWeekend && mShowDistinctWeekendColor ? mFutureWeekendBackgroundPaint : mFutureBackgroundPaint;
                     float startY = mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight/2 + mHeaderMarginBottom + mCurrentOrigin.y;
 
-                    if (sameDay){
+                    if (highlightedDay){
                         Calendar now = Calendar.getInstance();
                         float beforeNow = (now.get(Calendar.HOUR_OF_DAY) + now.get(Calendar.MINUTE)/60.0f) * mHourHeight;
                         canvas.drawRect(start, startY, startPixel + mWidthPerDay, startY+beforeNow, pastPaint);
@@ -685,7 +685,7 @@ public class WeekView extends View {
                     }
                 }
                 else {
-                    canvas.drawRect(start, mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom, startPixel + mWidthPerDay, getHeight(), sameDay ? mTodayBackgroundPaint : mDayBackgroundPaint);
+                    canvas.drawRect(start, mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom, startPixel + mWidthPerDay, getHeight(), highlightedDay ? mTodayBackgroundPaint : mDayBackgroundPaint);
                 }
             }
 
@@ -709,7 +709,7 @@ public class WeekView extends View {
             drawEvents(day, startPixel, canvas);
 
             // Draw the line at the current time.
-            if (mShowNowLine && sameDay){
+            if (mShowNowLine && highlightedDay){
                 float startY = mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight/2 + mHeaderMarginBottom + mCurrentOrigin.y;
                 Calendar now = Calendar.getInstance();
                 float beforeNow = (now.get(Calendar.HOUR_OF_DAY) + now.get(Calendar.MINUTE)/60.0f) * mHourHeight;
